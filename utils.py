@@ -31,6 +31,9 @@ def download_youtube_audio(url, output_path="yt_audio"):
         "format": "bestaudio/best",
         "outtmpl": output_path + "_%(id)s.%(ext)s",
         "quiet": True,
+        "http_headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        },
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
