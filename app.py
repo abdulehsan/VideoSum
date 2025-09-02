@@ -25,7 +25,6 @@ with tab2:
             audio_path = download_youtube_audio(youtube_url)
             transcript = transcribe_audio(audio_path, client)
             summary = summarize_text_with_llm(transcript, client)
-
             st.session_state["transcript"] = transcript
             st.session_state["summary"] = summary
             st.session_state["chat_history"] = []  # reset chat for new video

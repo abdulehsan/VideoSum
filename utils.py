@@ -1,11 +1,9 @@
 from groq import Groq
-from dotenv import load_dotenv
-import os
 import yt_dlp
+import os
+import streamlit as st
 
-load_dotenv()
-
-GROQ_KEY_1 = os.getenv("GROQ_KEY_1")
+GROQ_KEY_1 = st.secrets["GROQ_KEY_1"]
 
 client = Groq(api_key=GROQ_KEY_1)
 
@@ -30,17 +28,19 @@ def summarize_text_with_llm(text, client: Groq):
 
 def download_youtube_audio(url, output_path="yt_audio"):
     ydl_opts = {
-        "format": "bestaudio/best",   # no video
-        "outtmpl": output_path,
+        "format": "bestaudio/best",
+        "outtmpl": output_path + "_%(id)s.%(ext)s",
         "quiet": True,
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
-                "preferredquality": "64",  # lighter, faster
+                "preferredquality": "64",
             }
         ],
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-    return output_path+".mp3"
+
+    # Output will be .mp3 with yt_dlp's naming
+    return next(f for f in os.listdir() if f.startswith(output_path) and f.endswith(".mp3"))
